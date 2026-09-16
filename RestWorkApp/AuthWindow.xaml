@@ -16,6 +16,43 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
+            
+            <!-- Кнопка выхода (в правом верхнем углу) -->
+            <Button Grid.Row="0" 
+                    x:Name="btnExit"
+                    Width="32" 
+                    Height="32" 
+                    HorizontalAlignment="Right" 
+                    VerticalAlignment="Top"
+                    Click="btnExit_Click"
+                    Cursor="Hand"
+                    ToolTip="Выйти из приложения"
+                    Style="{StaticResource SecondaryButtonStyle}">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="#FF6B6B"
+                                CornerRadius="16"
+                                Width="32"
+                                Height="32">
+                            <Path Data="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" 
+                                  Fill="White" 
+                                  HorizontalAlignment="Center" 
+                                  VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF5252"/>
+                                <Setter TargetName="border" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="1.1" ScaleY="1.1"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
 
             <StackPanel Grid.Row="0" Margin="0,0,0,30">
                 <!-- Заголовок -->

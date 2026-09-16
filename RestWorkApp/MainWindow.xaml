@@ -29,6 +29,8 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <!-- Логотип -->
@@ -196,10 +198,10 @@
                     </StackPanel>
                 </ScrollViewer>
 
-                <!-- 🔗 Кнопка-ссылка на Word-файл (всегда видна, над Logout) -->
-                <Border Grid.Row="2" Padding="15,10,15,15" Background="#FFF9F9F9">
+                <!-- 🔗 Кнопка-ссылка на Word-файл (перемещена выше) -->
+                <Border Grid.Row="2" Padding="15,10,15,5" Background="Transparent">
                     <Button x:Name="btnWordLink"
-                        Content="Руководство полльзователя"
+                        Content="Руководство пользователя"
                         Style="{StaticResource SecondaryButtonStyle}"
                         Height="40"
                         FontSize="13"
@@ -227,11 +229,90 @@
                     </Button>
                 </Border>
 
-                <!-- 👤 Профиль + Выход -->
-                <Border Grid.Row="3" Padding="15" BorderThickness="0,1,0,0" BorderBrush="#FFE8E8E8">
+                <!-- 🌓 Переключатель темы -->
+                <Border Grid.Row="3" Padding="15,10,15,15" BorderThickness="0,1,0,0" BorderBrush="#FFE8E8E8">
                     <StackPanel>
-
+                        <TextBlock Text="Тема оформления"
+                                  Foreground="#636E72"
+                                  FontSize="11"
+                                  FontWeight="SemiBold"
+                                  Margin="0,0,0,8"
+                                  HorizontalAlignment="Center"/>
                         
+                        <Border x:Name="ThemeToggle"
+                                Width="200"
+                                Height="40"
+                                CornerRadius="20"
+                                Background="#DFE6E9"
+                                Cursor="Hand"
+                                MouseLeftButtonDown="ThemeToggle_MouseLeftButtonDown">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <!-- Иконка луны (слева) -->
+                                <Viewbox Grid.Column="0" Width="20" Height="20" Margin="10,0,0,0" HorizontalAlignment="Left">
+                                    <Canvas Width="24" Height="24">
+                                        <Path Fill="#636E72" Data="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-3.03 0-5.5-2.47-5.5-5.5 0-1.82.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/>
+                                    </Canvas>
+                                </Viewbox>
+                                
+                                <!-- Иконка солнца (справа) -->
+                                <Viewbox Grid.Column="1" Width="20" Height="20" Margin="0,0,10,0" HorizontalAlignment="Right">
+                                    <Canvas Width="24" Height="24">
+                                        <Path Fill="#FDCB6E" Data="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0 .39-.39.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/>
+                                    </Canvas>
+                                </Viewbox>
+                                
+                                <!-- Кружок переключателя -->
+                                <Border x:Name="ToggleCircle"
+                                        Width="32"
+                                        Height="32"
+                                        CornerRadius="16"
+                                        Background="White"
+                                        HorizontalAlignment="Left"
+                                        Margin="4,0,0,0"
+                                        Effect="{StaticResource CardShadow}">
+                                    <Border.RenderTransform>
+                                        <TranslateTransform X="0"/>
+                                    </Border.RenderTransform>
+                                </Border>
+                            </Grid>
+                            <Border.Triggers>
+                                <EventTrigger RoutedEvent="Border.MouseEnter">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="ToggleCircle" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" To="100" Duration="0:0:0.3">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CubicEase EasingMode="EaseInOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <ColorAnimation Storyboard.TargetName="ThemeToggle" Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)" To="#FFE0E0E0" Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="Border.MouseLeave">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="ToggleCircle" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" To="0" Duration="0:0:0.3">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CubicEase EasingMode="EaseInOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <ColorAnimation Storyboard.TargetName="ThemeToggle" Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)" To="#FFDFE6E9" Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Border.Triggers>
+                        </Border>
+                    </StackPanel>
+                </Border>
+
+                <!-- 👤 Профиль + Выход -->
+                <Border Grid.Row="4" Padding="15" BorderThickness="0,1,0,0" BorderBrush="#FFE8E8E8">
+                    <StackPanel>
                         <Button x:Name="btnLogout"
                                 Content="Выйти из системы"
                                 Style="{StaticResource DangerButtonStyle}"
