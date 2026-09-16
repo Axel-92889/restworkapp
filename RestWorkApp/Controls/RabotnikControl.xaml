@@ -98,6 +98,22 @@
                             <DataGridTextColumn Header="ФИО" Width="2*" Binding="{Binding FIO_R}"/>
                             <DataGridTextColumn Header="Телефон" Width="*" Binding="{Binding Tel_R}"/>
                             <DataGridTextColumn Header="Логин" Width="*" Binding="{Binding login}"/>
+                            <DataGridTemplateColumn Header="Пароль" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding password_plain}" 
+                                                   VerticalAlignment="Center" 
+                                                   Margin="5"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                                <DataGridTemplateColumn.CellEditingTemplate>
+                                    <DataTemplate>
+                                        <TextBox Text="{Binding password_plain, UpdateSourceTrigger=PropertyChanged}" 
+                                                 VerticalAlignment="Center" 
+                                                 Margin="5"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellEditingTemplate>
+                            </DataGridTemplateColumn>
                             <DataGridTextColumn Header="ID Должности" Width="110" Binding="{Binding id_dolh}"/>
                             <DataGridTextColumn Header="ID Роли" Width="80" Binding="{Binding id_rule}"/>
                         </DataGrid.Columns>

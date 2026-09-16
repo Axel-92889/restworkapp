@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Data;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,11 +12,14 @@ namespace RestaurantWorkApp.Controls
     public partial class RabotnikControl : UserControl
     {
         private string connectionString = "server=localhost;port=3306;username=root;password=root;database=restaurant_db";
+        private bool isAdmin = false;
 
         public RabotnikControl()
         {
             InitializeComponent();
-            Loaded += RabotnikControl_Loaded; // Проверка прав доступа при загрузке
+            Loaded += RabotnikControl_Loaded;
+            // Проверяем, является ли текущий пользователь администратором (роль 1)
+            isAdmin = AccessControl.GetCurrentRole() == 1;
         }
 
         private void RabotnikControl_Loaded(object sender, RoutedEventArgs e)
@@ -44,13 +48,42 @@ namespace RestaurantWorkApp.Controls
             {
                 using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
-                    // Исключаем пароль из выборки для безопасности (VARBINARY отображается как System.Byte[])
-                    string query = "SELECT id_Rabotnik, FIO_R, Tel_R, login, id_dolh, id_rule FROM Rabotnik ORDER BY id_Rabotnik";
+                    // Для администратора загружаем пароль в виде байтов и расшифрованного текста
+                    string query = isAdmin 
+                        ? "SELECT id_Rabotnik, FIO_R, Tel_R, login, password, id_dolh, id_rule FROM Rabotnik ORDER BY id_Rabotnik"
+                        : "SELECT id_Rabotnik, FIO_R, Tel_R, login, id_dolh, id_rule FROM Rabotnik ORDER BY id_Rabotnik";
+                    
                     MySqlCommand cmd = new MySqlCommand(query, conn);
                     MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
                     DataTable dt = new DataTable();
                     adapter.Fill(dt);
+                    
+                    // Если администратор, добавляем колонку с расшифрованным паролем
+                    if (isAdmin && dt.Columns.Contains("password"))
+                    {
+                        dt.Columns.Add("password_plain", typeof(string));
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            if (row["password"] != DBNull.Value)
+                            {
+                                byte[] passwordBytes = (byte[])row["password"];
+                                row["password_plain"] = Encoding.UTF8.GetString(passwordBytes);
+                            }
+                            else
+                            {
+                                row["password_plain"] = string.Empty;
+                            }
+                        }
+                    }
+                    
                     dgRabotnik.ItemsSource = dt.DefaultView;
+                    
+                    // Скрываем/показываем колонку пароля в зависимости от прав
+                    var passwordColumn = dgRabotnik.Columns.FirstOrDefault(c => c.Header.ToString() == "Пароль");
+                    if (passwordColumn != null)
+                    {
+                        passwordColumn.Visibility = isAdmin ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+                    }
                 }
             }
             catch (Exception ex)
@@ -213,6 +246,39 @@ namespace RestaurantWorkApp.Controls
 
                 int id = Convert.ToInt32(row["id_Rabotnik"]);
                 string header = e.Column.Header as string;
+                
+                // Обработка колонки пароля
+                if (header == "Пароль")
+                {
+                    var editingElement = e.EditingElement as TextBox;
+                    if (editingElement != null)
+                    {
+                        string newPassword = editingElement.Text.Trim();
+                        try
+                        {
+                            using (MySqlConnection conn = new MySqlConnection(connectionString))
+                            {
+                                string query = "UPDATE Rabotnik SET password = @val WHERE id_Rabotnik = @id";
+                                MySqlCommand cmd = new MySqlCommand(query, conn);
+                                cmd.Parameters.AddWithValue("@id", id);
+                                cmd.Parameters.AddWithValue("@val", string.IsNullOrEmpty(newPassword) ? (object)DBNull.Value : Encoding.UTF8.GetBytes(newPassword));
+                                
+                                conn.Open();
+                                cmd.ExecuteNonQuery();
+                                
+                                // Обновляем отображаемое значение
+                                row["password_plain"] = newPassword;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Ошибка при обновлении пароля: {ex.Message} ");
+                            LoadData();
+                        }
+                    }
+                    return;
+                }
+                
                 string newValue = (e.EditingElement as TextBox)?.Text.Trim();
 
                 try
