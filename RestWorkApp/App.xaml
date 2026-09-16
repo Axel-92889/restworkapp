@@ -28,6 +28,35 @@
             <GradientStop Color="#44BDB5" Offset="1"/>
         </LinearGradientBrush>
 
+        <!-- Цвета для тёмной темы -->
+        <SolidColorBrush x:Key="DarkPrimaryColor" Color="#FF8787"/>
+        <SolidColorBrush x:Key="DarkPrimaryHoverColor" Color="#FF6B6B"/>
+        <SolidColorBrush x:Key="DarkSecondaryColor" Color="#6EE7E0"/>
+        <SolidColorBrush x:Key="DarkBackgroundColor" Color="#1A1A2E"/>
+        <SolidColorBrush x:Key="DarkSurfaceColor" Color="#16213E"/>
+        <SolidColorBrush x:Key="DarkCardColor" Color="#0F3460"/>
+        <SolidColorBrush x:Key="DarkTextColor" Color="#EAEAEA"/>
+        <SolidColorBrush x:Key="DarkGrayColor" Color="#A0A0A0"/>
+        <SolidColorBrush x:Key="DarkLightGrayColor" Color="#4A4A6A"/>
+        <SolidColorBrush x:Key="DarkSuccessColor" Color="#00D9A5"/>
+        <SolidColorBrush x:Key="DarkWarningColor" Color="#FFE082"/>
+        <SolidColorBrush x:Key="DarkErrorColor" Color="#FF8A80"/>
+        <SolidColorBrush x:Key="DarkBorderColor" Color="#2D4A7C"/>
+
+        <!-- Градиенты для тёмной темы -->
+        <LinearGradientBrush x:Key="DarkPrimaryGradient" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#FF8787" Offset="0"/>
+            <GradientStop Color="#FF6B6B" Offset="1"/>
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="DarkSecondaryGradient" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#6EE7E0" Offset="0"/>
+            <GradientStop Color="#5DD4C9" Offset="1"/>
+        </LinearGradientBrush>
+
+        <!-- Тени для тёмной темы -->
+        <DropShadowEffect x:Key="DarkCardShadow" Color="#000000" Opacity="0.3" BlurRadius="16" ShadowDepth="4" Direction="270"/>
+        <DropShadowEffect x:Key="DarkHoverShadow" Color="#000000" Opacity="0.5" BlurRadius="32" ShadowDepth="12" Direction="270"/>
+
         <!-- 2. ПАРАМЕТРЫ -->
         <DropShadowEffect x:Key="CardShadow" Color="#000000" Opacity="0.08" BlurRadius="12" ShadowDepth="2" Direction="270"/>
         <DropShadowEffect x:Key="HoverShadow" Color="#000000" Opacity="0.12" BlurRadius="24" ShadowDepth="8" Direction="270"/>
