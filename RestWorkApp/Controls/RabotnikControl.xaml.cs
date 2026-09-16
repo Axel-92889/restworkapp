@@ -45,7 +45,7 @@ namespace RestaurantWorkApp.Controls
                 using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
                     // Исключаем пароль из выборки для безопасности (VARBINARY отображается как System.Byte[])
-                    string query = "SELECT id_Rabotnik, FIO_R, Tel_R, login, id_dolh, id_rule FROM Rabotnik ORDER BY id_Rabotnik ";
+                    string query = "SELECT id_Rabotnik, FIO_R, Tel_R, login, id_dolh, id_rule FROM Rabotnik ORDER BY id_Rabotnik";
                     MySqlCommand cmd = new MySqlCommand(query, conn);
                     MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
                     DataTable dt = new DataTable();
@@ -86,15 +86,15 @@ namespace RestaurantWorkApp.Controls
                 {
                     string query = "INSERT INTO Rabotnik (FIO_R, Tel_R, login, password, id_dolh, id_rule) VALUES (@fio, @tel, @login, @pass, @dolh, @rule) ";
                     MySqlCommand cmd = new MySqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@fio ", fio);
-                    cmd.Parameters.AddWithValue("@tel ", tel);
-                    cmd.Parameters.AddWithValue("@login ", string.IsNullOrEmpty(login) ? (object)DBNull.Value : login);
+                    cmd.Parameters.AddWithValue("@fio", fio);
+                    cmd.Parameters.AddWithValue("@tel", tel);
+                    cmd.Parameters.AddWithValue("@login", string.IsNullOrEmpty(login) ? (object)DBNull.Value : login);
 
                     // Преобразуем строку пароля в байты для VARBINARY
-                    cmd.Parameters.AddWithValue("@pass ", string.IsNullOrEmpty(pass) ? (object)DBNull.Value : Encoding.UTF8.GetBytes(pass));
+                    cmd.Parameters.AddWithValue("@pass", string.IsNullOrEmpty(pass) ? (object)DBNull.Value : Encoding.UTF8.GetBytes(pass));
 
-                    cmd.Parameters.AddWithValue("@dolh ", idDolh);
-                    cmd.Parameters.AddWithValue("@rule ", idRule);
+                    cmd.Parameters.AddWithValue("@dolh", idDolh);
+                    cmd.Parameters.AddWithValue("@rule", idRule);
 
                     conn.Open();
                     cmd.ExecuteNonQuery();
@@ -128,8 +128,8 @@ namespace RestaurantWorkApp.Controls
             }
 
             DataRowView row = dgRabotnik.SelectedItem as DataRowView;
-            int id = Convert.ToInt32(row["id_Rabotnik "]);
-            string name = row["FIO_R "].ToString();
+            int id = Convert.ToInt32(row["id_Rabotnik"]);
+            string name = row["FIO_R"].ToString();
 
             var result = MessageBox.Show($"Удалить сотрудника '{name}'?\nВнимание: удалённый сотрудник пропадёт из связанных заказов и доставок. ",
                                            "Подтверждение удаления ",
@@ -148,9 +148,9 @@ namespace RestaurantWorkApp.Controls
                             try
                             {
                                 // 1. Удаление записи
-                                string deleteQuery = "DELETE FROM Rabotnik WHERE id_Rabotnik = @id ";
+                                string deleteQuery = "DELETE FROM Rabotnik WHERE id_Rabotnik = @id";
                                 MySqlCommand deleteCmd = new MySqlCommand(deleteQuery, conn, transaction);
-                                deleteCmd.Parameters.AddWithValue("@id ", id);
+                                deleteCmd.Parameters.AddWithValue("@id", id);
                                 int rowsAffected = deleteCmd.ExecuteNonQuery();
 
                                 if (rowsAffected > 0)
@@ -211,7 +211,7 @@ namespace RestaurantWorkApp.Controls
                 DataRowView row = e.Row.Item as DataRowView;
                 if (row == null) return;
 
-                int id = Convert.ToInt32(row["id_Rabotnik "]);
+                int id = Convert.ToInt32(row["id_Rabotnik"]);
                 string header = e.Column.Header as string;
                 string newValue = (e.EditingElement as TextBox)?.Text.Trim();
 
@@ -221,37 +221,37 @@ namespace RestaurantWorkApp.Controls
                     {
                         string query = " ";
                         MySqlCommand cmd = new MySqlCommand(query, conn);
-                        cmd.Parameters.AddWithValue("@id ", id);
+                        cmd.Parameters.AddWithValue("@id", id);
 
                         switch (header)
                         {
                             case "ФИО ":
                                 if (string.IsNullOrEmpty(newValue)) { MessageBox.Show("ФИО не может быть пустым "); e.Cancel = true; return; }
-                                query = "UPDATE Rabotnik SET FIO_R = @val WHERE id_Rabotnik = @id ";
-                                cmd.Parameters.AddWithValue("@val ", newValue);
+                                query = "UPDATE Rabotnik SET FIO_R = @val WHERE id_Rabotnik = @id";
+                                cmd.Parameters.AddWithValue("@val", newValue);
                                 break;
 
                             case "Телефон ":
                                 if (string.IsNullOrEmpty(newValue)) { MessageBox.Show("Телефон не может быть пустым "); e.Cancel = true; return; }
-                                query = "UPDATE Rabotnik SET Tel_R = @val WHERE id_Rabotnik = @id ";
-                                cmd.Parameters.AddWithValue("@val ", newValue);
+                                query = "UPDATE Rabotnik SET Tel_R = @val WHERE id_Rabotnik = @id";
+                                cmd.Parameters.AddWithValue("@val", newValue);
                                 break;
 
                             case "Логин ":
-                                query = "UPDATE Rabotnik SET login = @val WHERE id_Rabotnik = @id ";
-                                cmd.Parameters.AddWithValue("@val ", string.IsNullOrEmpty(newValue) ? (object)DBNull.Value : newValue);
+                                query = "UPDATE Rabotnik SET login = @val WHERE id_Rabotnik = @id";
+                                cmd.Parameters.AddWithValue("@val", string.IsNullOrEmpty(newValue) ? (object)DBNull.Value : newValue);
                                 break;
 
                             case "ID Должности ":
                                 if (!int.TryParse(newValue, out int d)) { MessageBox.Show("Неверный формат ID должности "); e.Cancel = true; return; }
-                                query = "UPDATE Rabotnik SET id_dolh = @val WHERE id_Rabotnik = @id ";
-                                cmd.Parameters.AddWithValue("@val ", d);
+                                query = "UPDATE Rabotnik SET id_dolh = @val WHERE id_Rabotnik = @id";
+                                cmd.Parameters.AddWithValue("@val", d);
                                 break;
 
                             case "ID Роли ":
                                 if (!int.TryParse(newValue, out int r)) { MessageBox.Show("Неверный формат ID роли "); e.Cancel = true; return; }
-                                query = "UPDATE Rabotnik SET id_rule = @val WHERE id_Rabotnik = @id ";
-                                cmd.Parameters.AddWithValue("@val ", r);
+                                query = "UPDATE Rabotnik SET id_rule = @val WHERE id_Rabotnik = @id";
+                                cmd.Parameters.AddWithValue("@val", r);
                                 break;
 
                             default: return; // ID сотрудника не редактируем
