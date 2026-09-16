@@ -1,0 +1,123 @@
+﻿<UserControl x:Class="RestaurantWorkApp.Controls.DeliveryControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="1000"
+             Background="#F5F5F5"
+             FontFamily="{StaticResource MainFont}">
+
+    <UserControl.Resources>
+        <x:Array x:Key="DeliveryStatusOptions" Type="sys:String">
+            <sys:String>PENDING</sys:String>
+            <sys:String>IN_PROGRESS</sys:String>
+            <sys:String>DELIVERED</sys:String>
+            <sys:String>CANCELLED</sys:String>
+        </x:Array>
+    </UserControl.Resources>
+
+    <Grid Margin="0,0,0,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- 🔷 Форма добавления -->
+        <Border Grid.Row="0" Style="{StaticResource CardStyle}">
+            <StackPanel>
+                <Border Style="{StaticResource CardHeaderStyle}">
+                    <TextBlock Text="Управление доставкой" Style="{StaticResource PageTitleStyle}" Margin="0"/>
+                </Border>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Row 0 -->
+                    <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,20,0">
+                        <Label Style="{StaticResource FormLabelStyle}" Content="Адрес доставки"/>
+                        <TextBox x:Name="txtAddress" Style="{StaticResource ModernTextBoxStyle}" Height="44"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="0" Grid.Column="1" Margin="0,0,20,0">
+                        <Label Style="{StaticResource FormLabelStyle}" Content="Дата доставки"/>
+                        <DatePicker x:Name="dpDeliveryDate" Height="44"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="0" Grid.Column="2" Margin="0,0,20,0">
+                        <Label Style="{StaticResource FormLabelStyle}" Content="Время (ЧЧ:ММ)"/>
+                        <TextBox x:Name="txtDeliveryTime" Style="{StaticResource ModernTextBoxStyle}" Text="12:00" Height="44"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="0" Grid.Column="3" Margin="0,0,20,0">
+                        <Label Style="{StaticResource FormLabelStyle}" Content="Статус"/>
+                        <ComboBox x:Name="cbStatusDelivery" ItemsSource="{StaticResource DeliveryStatusOptions}" SelectedIndex="0" Height="44"/>
+                    </StackPanel>
+
+                    <!-- Row 1 -->
+                    <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,20,0">
+                        <Label Style="{StaticResource FormLabelStyle}" Content="ID заказа"/>
+                        <TextBox x:Name="txtIdZakaz" Style="{StaticResource ModernTextBoxStyle}" Height="44"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="1" Margin="0,0,20,0">
+                        <Label Style="{StaticResource FormLabelStyle}" Content="ID работника"/>
+                        <TextBox x:Name="txtIdRabotnik" Style="{StaticResource ModernTextBoxStyle}" Height="44"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="4" VerticalAlignment="Bottom">
+                        <Button x:Name="btnAdd" Style="{StaticResource PrimaryButtonStyle}"
+                                Content="Добавить" Height="44" Width="180"
+                                Margin="0,0,0,20" Click="btnAdd_Click"/>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <!-- 🔷 Таблица доставок -->
+        <Border Grid.Row="1" Style="{StaticResource CardStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="0,0,0,15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Список доставок" FontSize="16" FontWeight="SemiBold" Foreground="#2D3436" VerticalAlignment="Center"/>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <Button x:Name="btnRefresh" Style="{StaticResource SecondaryButtonStyle}"
+                                Content="Обновить" Height="38" Width="110" Margin="0,0,10,0" Click="btnRefresh_Click"/>
+                        <Button x:Name="btnDelete" Style="{StaticResource DangerButtonStyle}"
+                                Content="Удалить" Height="38" Width="110" Click="btnDelete_Click"/>
+                    </StackPanel>
+                </Grid>
+
+                <Border Grid.Row="1" Background="White" CornerRadius="8" BorderBrush="#DFE6E9" BorderThickness="1" Margin="0,0,0,15">
+                    <DataGrid x:Name="dgDeliveries" Style="{StaticResource BootstrapDataGridStyle}"
+                              AutoGenerateColumns="False" CellEditEnding="dgDeliveries_CellEditEnding">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" Width="60" Binding="{Binding id_Delivery}" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Адрес" Width="200" Binding="{Binding Address}"/>
+                            <DataGridTextColumn Header="Время доставки" Width="130" Binding="{Binding Delivery_Time, StringFormat={}{0:dd.MM.yyyy HH:mm}}"/>
+                            <DataGridComboBoxColumn Header="Статус" Width="120"
+                                                    ItemsSource="{Binding Source={StaticResource DeliveryStatusOptions}}"
+                                                    SelectedItemBinding="{Binding Status_Delivery}"/>
+                            <DataGridTextColumn Header="ID заказа" Width="80" Binding="{Binding id_zakaz}"/>
+                            <DataGridTextColumn Header="ID работника" Width="80" Binding="{Binding id_rabotnik}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

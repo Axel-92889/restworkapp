@@ -1,0 +1,162 @@
+﻿<UserControl x:Class="RestaurantWorkApp.Controls.ClientControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="1000"
+             Background="#F5F5F5"
+             FontFamily="{StaticResource MainFont}">
+
+    <UserControl.Resources>
+        <Style x:Key="ModernPasswordBoxStyle" TargetType="PasswordBox">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#2D3436"/>
+            <Setter Property="BorderBrush" Value="#DFE6E9"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="PasswordBox">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="8"
+                                BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource PrimaryColor}"/>
+                                <Setter TargetName="border" Property="BorderThickness" Value="2"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="EyeButtonStyle" TargetType="ToggleButton">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="0,8,8,0" Padding="10,0">
+                            <TextBlock x:Name="EyeIcon" Text="👁" FontSize="18" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="0,0,0,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- 🔷 Форма добавления -->
+        <Border Grid.Row="0" Style="{StaticResource CardStyle}">
+            <StackPanel>
+                <Border Style="{StaticResource CardHeaderStyle}">
+                    <TextBlock Text="Управление клиентами" Style="{StaticResource PageTitleStyle}" Margin="0"/>
+                </Border>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Row 0 -->
+                    <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,20,0">
+                        <Label Style="{StaticResource FormLabelStyle}" Content="ФИО клиента"/>
+                        <TextBox x:Name="txtFIO_C" Style="{StaticResource ModernTextBoxStyle}" Height="44"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="0" Grid.Column="1" Margin="0,0,20,0">
+                        <Label Style="{StaticResource FormLabelStyle}" Content="Телефон"/>
+                        <TextBox x:Name="txtTel_C" Style="{StaticResource ModernTextBoxStyle}" Height="44"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="0" Grid.Column="2" Margin="0,0,20,0">
+                        <Label Style="{StaticResource FormLabelStyle}" Content="Email"/>
+                        <TextBox x:Name="txtMail" Style="{StaticResource ModernTextBoxStyle}" Height="44"/>
+                    </StackPanel>
+
+                    <!-- Row 1 -->
+                    <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,20,0">
+                        <Label Style="{StaticResource FormLabelStyle}" Content="Дата регистрации"/>
+                        <DatePicker x:Name="dpData_Reg" Height="44"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="1" Margin="0,0,20,0">
+                        <Label Style="{StaticResource FormLabelStyle}" Content="Логин"/>
+                        <TextBox x:Name="txtLogin" Style="{StaticResource ModernTextBoxStyle}" Height="44"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="2" Margin="0,0,20,0">
+                        <Label Style="{StaticResource FormLabelStyle}" Content="Пароль"/>
+                        <Grid>
+                            <PasswordBox x:Name="pbPassword" Style="{StaticResource ModernPasswordBoxStyle}" Height="44"/>
+                            <ToggleButton x:Name="btnTogglePassword" Style="{StaticResource EyeButtonStyle}"
+                                          IsChecked="False" Click="btnTogglePassword_Click" HorizontalAlignment="Right"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <!-- Row 2 -->
+                    <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,0,20,0">
+                        <Label Style="{StaticResource FormLabelStyle}" Content="ID роли"/>
+                        <TextBox x:Name="txtIdRule" Style="{StaticResource ModernTextBoxStyle}" Height="44"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Grid.Column="2" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                        <Button x:Name="btnAdd" Style="{StaticResource PrimaryButtonStyle}"
+                                Content="Добавить" Height="44" Width="180" Click="btnAdd_Click"/>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <!-- 🔷 Таблица клиентов -->
+        <Border Grid.Row="1" Style="{StaticResource CardStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="0,0,0,15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Список клиентов" FontSize="16" FontWeight="SemiBold" Foreground="#2D3436" VerticalAlignment="Center"/>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <Button x:Name="btnRefresh" Style="{StaticResource SecondaryButtonStyle}"
+                                Content="Обновить" Height="38" Width="110" Margin="0,0,10,0" Click="btnRefresh_Click"/>
+                        <Button x:Name="btnDelete" Style="{StaticResource DangerButtonStyle}"
+                                Content="Удалить" Height="38" Width="110" Click="btnDelete_Click"/>
+                    </StackPanel>
+                </Grid>
+
+                <Border Grid.Row="1" Background="White" CornerRadius="8" BorderBrush="#DFE6E9" BorderThickness="1" Margin="0,0,0,15">
+                    <DataGrid x:Name="dgClients" Style="{StaticResource BootstrapDataGridStyle}"
+                              AutoGenerateColumns="False" CellEditEnding="dgClients_CellEditEnding">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" Width="60" Binding="{Binding id_Client}" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="ФИО" Width="150" Binding="{Binding FIO_C}"/>
+                            <DataGridTextColumn Header="Телефон" Width="100" Binding="{Binding Tel_C}"/>
+                            <DataGridTextColumn Header="Email" Width="130" Binding="{Binding Mail}"/>
+                            <DataGridTextColumn Header="Дата рег." Width="90" Binding="{Binding Data_Reg, StringFormat={}{0:dd.MM.yyyy}}"/>
+                            <DataGridTextColumn Header="Логин" Width="100" Binding="{Binding login}"/>
+                            <DataGridTextColumn Header="Пароль" Width="120" Binding="{Binding password_plain}"/>
+                            <DataGridTextColumn Header="ID роли" Width="80" Binding="{Binding id_rule}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

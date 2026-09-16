@@ -1,0 +1,86 @@
+﻿<Window x:Class="RestaurantWorkApp.ProgressWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Загрузка системы..."
+        Height="400" Width="550"
+        WindowStartupLocation="CenterScreen"
+        Background="#F5F5F5"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        FontFamily="Segoe UI">
+
+    <Border Background="White" CornerRadius="20" BorderThickness="0" Effect="{StaticResource CardShadow}">
+        <Grid Margin="40">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Логотип и название -->
+            <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,0,0,30">
+                <TextBlock Text="🍕"
+                          FontSize="60"
+                          HorizontalAlignment="Center"
+                          Margin="0,0,0,10"/>
+                <TextBlock Text="Пицца от Куницы"
+                          Foreground="#FF6B6B"
+                          FontSize="28"
+                          FontWeight="Bold"
+                          HorizontalAlignment="Center"/>
+                <TextBlock Text="Система управления рестораном"
+                          Foreground="#636E72"
+                          FontSize="13"
+                          HorizontalAlignment="Center"
+                          Margin="0,5,0,0"/>
+            </StackPanel>
+
+            <!-- Прогресс бар -->
+            <StackPanel Grid.Row="1" VerticalAlignment="Center" Margin="0,0,0,20">
+                <Grid Margin="0,5,0,15">
+                    <TextBlock x:Name="txtStatus"
+                             Text="Инициализация системы..."
+                             Foreground="#2D3436"
+                             FontSize="15"
+                             FontWeight="Medium"
+                             HorizontalAlignment="Center"/>
+                </Grid>
+
+                <Border BorderBrush="#DFE6E9" BorderThickness="2" CornerRadius="10" Background="#F8F9FA" Padding="2">
+                    <ProgressBar x:Name="progressBar"
+                                Height="25"
+                                Maximum="100"
+                                Value="0"
+                                Background="Transparent">
+                        <ProgressBar.Foreground>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="#FF6B6B" Offset="0"/>
+                                <GradientStop Color="#FF5252" Offset="1"/>
+                            </LinearGradientBrush>
+                        </ProgressBar.Foreground>
+                    </ProgressBar>
+                </Border>
+
+                <TextBlock x:Name="txtPercent"
+                         Text="0%"
+                         Foreground="#FF6B6B"
+                         FontSize="18"
+                         FontWeight="Bold"
+                         HorizontalAlignment="Center"
+                         Margin="0,5,0,10"/>
+            </StackPanel>
+
+            
+
+            <!-- Версия -->
+            <TextBlock Grid.Row="2"
+                      Text="Версия 1.0.0"
+                      Foreground="#B2BEC3"
+                      FontSize="11"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Bottom"
+                      Margin="0,0,0,10"/>
+        </Grid>
+    </Border>
+</Window>
