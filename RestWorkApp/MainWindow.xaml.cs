@@ -475,6 +475,31 @@ namespace RestaurantWorkApp
             }
         }
 
+        private void ThemeToggle_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            ThemeManager.IsDarkTheme = !ThemeManager.IsDarkTheme;
+            ThemeManager.ApplyTheme(Application.Current);
+            
+            // Анимация кружка переключателя
+            var toggleCircle = FindName("ToggleCircle") as Border;
+            if (toggleCircle != null)
+            {
+                var transform = toggleCircle.RenderTransform as TranslateTransform;
+                if (transform != null)
+                {
+                    var animation = new System.Windows.Media.Animation.DoubleAnimation
+                    {
+                        To = ThemeManager.IsDarkTheme ? 100 : 0,
+                        Duration = TimeSpan.FromMilliseconds(300),
+                        EasingFunction = new System.Windows.Media.Animation.CubicEase { EasingMode = System.Windows.Media.Animation.EasingMode.EaseInOut }
+                    };
+                    transform.BeginAnimation(TranslateTransform.XProperty, animation);
+                }
+            }
+            
+            ShowStatus(ThemeManager.IsDarkTheme ? "Тёмная тема включена" : "Светлая тема включена", Colors.LimeGreen);
+        }
+
         private void btnLogout_Click(object sender, RoutedEventArgs e)
         {
             var result = MessageBox.Show(

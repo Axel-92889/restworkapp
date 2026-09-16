@@ -8,14 +8,25 @@ namespace RestaurantWorkApp
     {
         private static bool _isDarkTheme = false;
 
-        public static bool IsDarkTheme => _isDarkTheme;
+        public static bool IsDarkTheme 
+        { 
+            get => _isDarkTheme;
+            set 
+            {
+                if (_isDarkTheme != value)
+                {
+                    _isDarkTheme = value;
+                    ApplyTheme(Application.Current);
+                }
+            }
+        }
 
         public static event EventHandler ThemeChanged;
 
         public static void ToggleTheme()
         {
             _isDarkTheme = !_isDarkTheme;
-            ApplyTheme();
+            ApplyTheme(Application.Current);
         }
 
         public static void SetDarkTheme(bool isDark)
@@ -23,13 +34,12 @@ namespace RestaurantWorkApp
             if (_isDarkTheme != isDark)
             {
                 _isDarkTheme = isDark;
-                ApplyTheme();
+                ApplyTheme(Application.Current);
             }
         }
 
-        private static void ApplyTheme()
+        public static void ApplyTheme(Application app)
         {
-            var app = Application.Current;
             if (app == null) return;
 
             // Светлая тема (по умолчанию)
