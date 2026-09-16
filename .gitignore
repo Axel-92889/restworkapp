@@ -1,1 +1,8 @@
-Nothing needs to be added to .gitignore since only source code files (.xaml and .cs) were modified, which should not be ignored.
+Nothing should be ignored based on the provided file changes, as they only include source code files (.cs) and configuration files (.xaml).
+/.vs
+/packages
+/RestWorkApp/bin/Debug/Docs
+/RestWorkApp/bin/Debug
+/RestWorkApp/obj
+/RestWorkApp/.vs
+/RestWorkApp/restworkapp.csproj.user
