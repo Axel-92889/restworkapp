@@ -102,16 +102,16 @@ namespace RestaurantWorkApp.Controls
                 {
                     // Используе м AES_ENCRYPT для шифрования пароля
                     string query = @"INSERT INTO Client (FIO_C, Tel_C, Mail, Data_Reg, login, password, id_rule) 
-                                     VALUES(@fio, @tel, @mail, @regDate, @login, AES_ENCRYPT(@password, @ key), @idRule) ";
+                                     VALUES(@fio, @tel, @mail, @regDate, @login, AES_ENCRYPT(@password, @key), @idRule) ";
                     MySqlCommand cmd = new MySqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@fio ", fio);
-                    cmd.Parameters.AddWithValue("@tel ", tel);
-                    cmd.Parameters.AddWithValue("@mail ", mail);
-                    cmd.Parameters.AddWithValue("@regDate ", regDate.Value);
-                    cmd.Parameters.AddWithValue("@login ", login);
-                    cmd.Parameters.AddWithValue("@password ", password);
-                    cmd.Parameters.AddWithValue("@key ", encryptionKey);
-                    cmd.Parameters.AddWithValue("@idRule ", idRule);
+                    cmd.Parameters.AddWithValue("@fio", fio);
+                    cmd.Parameters.AddWithValue("@tel", tel);
+                    cmd.Parameters.AddWithValue("@mail", mail);
+                    cmd.Parameters.AddWithValue("@regDate", regDate.Value);
+                    cmd.Parameters.AddWithValue("@login", login);
+                    cmd.Parameters.AddWithValue("@password", password);
+                    cmd.Parameters.AddWithValue("@key", encryptionKey);
+                    cmd.Parameters.AddWithValue("@idRule", idRule);
 
                     conn.Open();
                     cmd.ExecuteNonQuery();
@@ -156,8 +156,8 @@ namespace RestaurantWorkApp.Controls
             }
 
             DataRowView selectedRow = dgClients.SelectedItem as DataRowView;
-            int id = Convert.ToInt32(selectedRow["id_Client "]);
-            string fio = selectedRow["FIO_C "].ToString();
+            int id = Convert.ToInt32(selectedRow["id_Client"]);
+            string fio = selectedRow["FIO_C"].ToString();
 
             var result = MessageBox.Show($"Удалить клиента '{fio}'? ",
                                           "Подтверждение удаления ",
@@ -176,9 +176,9 @@ namespace RestaurantWorkApp.Controls
                             try
                             {
                                 // 1. Удаление записи
-                                string deleteQuery = "DELETE FROM Client WHERE id_Client = @id ";
+                                string deleteQuery = "DELETE FROM Client WHERE id_Client = @id";
                                 MySqlCommand deleteCmd = new MySqlCommand(deleteQuery, conn, transaction);
-                                deleteCmd.Parameters.AddWithValue("@id ", id);
+                                deleteCmd.Parameters.AddWithValue("@id", id);
                                 int rowsAffected = deleteCmd.ExecuteNonQuery();
 
                                 if (rowsAffected > 0)
@@ -239,7 +239,7 @@ namespace RestaurantWorkApp.Controls
                 DataRowView rowView = e.Row.Item as DataRowView;
                 if (rowView == null) return;
 
-                int id = Convert.ToInt32(rowView["id_Client "]);
+                int id = Convert.ToInt32(rowView["id_Client"]);
                 string columnHeader = (e.Column as DataGridColumn)?.Header.ToString();
 
                 if (string.IsNullOrEmpty(columnHeader)) return;
@@ -269,16 +269,16 @@ namespace RestaurantWorkApp.Controls
                         switch (columnHeader)
                         {
                             case "ФИО ":
-                                fieldName = "FIO_C ";
+                                fieldName = "FIO_C";
                                 break;
                             case "Телефон ":
-                                fieldName = "Tel_C ";
+                                fieldName = "Tel_C";
                                 break;
                             case "Email ":
-                                fieldName = "Mail ";
+                                fieldName = "Mail";
                                 break;
                             case "Дата рег. ":
-                                fieldName = "Data_Reg ";
+                                fieldName = "Data_Reg";
                                 // Проверим, что дата корректна
                                 if (!DateTime.TryParse(newValue, out _))
                                 {
@@ -294,11 +294,11 @@ namespace RestaurantWorkApp.Controls
                                 // Для пароля нужно использовать AES_ENCRYPT при обновлении
                                 fieldName = "password ";
                                 // Специальный запрос с шифрованием
-                                string updatePasswordQuery = "UPDATE Client SET password = AES_ENCRYPT(@value, @key) WHERE id_Client = @id ";
+                                string updatePasswordQuery = "UPDATE Client SET password = AES_ENCRYPT(@value, @key) WHERE id_Client = @id";
                                 cmd = new MySqlCommand(updatePasswordQuery, conn);
                                 cmd.Parameters.AddWithValue("@value ", newValue);
-                                cmd.Parameters.AddWithValue("@key ", encryptionKey);
-                                cmd.Parameters.AddWithValue("@id ", id);
+                                cmd.Parameters.AddWithValue("@key", encryptionKey);
+                                cmd.Parameters.AddWithValue("@id", id);
                                 conn.Open();
                                 cmd.ExecuteNonQuery();
                                 // После обновления возвращаемся, чтобы не выполнять  обычный UPDATE
@@ -319,10 +319,10 @@ namespace RestaurantWorkApp.Controls
                         }
 
                         // Обычное обновление для не-парольных полей
-                        string query = $"UPDATE Client SET {fieldName} = @value WHERE id_Client = @id ";
+                        string query = $"UPDATE Client SET {fieldName} = @value WHERE id_Client = @id";
                         cmd = new MySqlCommand(query, conn);
                         cmd.Parameters.AddWithValue("@value ", newValue);
-                        cmd.Parameters.AddWithValue("@id ", id);
+                        cmd.Parameters.AddWithValue("@id", id);
 
                         conn.Open();
                         cmd.ExecuteNonQuery();
@@ -372,9 +372,9 @@ namespace RestaurantWorkApp.Controls
                                     CAST(AES_DECRYPT(password, @key) AS CHAR) AS password_plain,
                                      id_rule
                              FROM Client
-                             ORDER BY id_Client ";
+                             ORDER BY id_Client";
                     MySqlCommand cmd = new MySqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@key ", encryptionKey);
+                    cmd.Parameters.AddWithValue("@key", encryptionKey);
                     MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
                     DataTable dt = new DataTable();
                     adapter.Fill(dt);

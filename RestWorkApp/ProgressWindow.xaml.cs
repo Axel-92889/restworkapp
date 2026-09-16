@@ -8,13 +8,19 @@ namespace RestaurantWorkApp
     public partial class ProgressWindow : Window
     {
         private DispatcherTimer progressTimer;
+        private int _currentProgress = 0;
+        private readonly object _progressLock = new object();
 
         public ProgressWindow()
         {
             InitializeComponent();
-
+            
+            // Принудительно обновляем layout перед запуском
+            this.LayoutUpdated += (s, e) => { };
+            
             progressTimer = new DispatcherTimer();
-            progressTimer.Interval = TimeSpan.FromMilliseconds(15);
+            // Увеличенный интервал для более плавной работы на мощных системах
+            progressTimer.Interval = TimeSpan.FromMilliseconds(30);
             progressTimer.Tick += ProgressTimer_Tick;
 
             // Запускаем прогресс
@@ -23,26 +29,42 @@ namespace RestaurantWorkApp
 
         private void ProgressTimer_Tick(object sender, EventArgs e)
         {
-            // Увеличиваем прогресс
-            progressBar.Value += 1;
-            txtPercent.Text = $"{progressBar.Value}%";
-
-            // Обновляем статус
-            UpdateStatus();
-
-            // Проверяем завершение
-            if (progressBar.Value >= progressBar.Maximum)
+            lock (_progressLock)
             {
-                progressTimer.Stop();
+                // Увеличиваем прогресс с адаптивной скоростью
+                int increment = 1;
+                if (_currentProgress < 10) increment = 2;
+                else if (_currentProgress < 30) increment = 1;
+                else if (_currentProgress < 60) increment = 2;
+                else if (_currentProgress < 80) increment = 1;
+                else increment = 1;
 
-                Task.Delay(400).ContinueWith(t =>
+                _currentProgress += increment;
+                
+                if (_currentProgress > 100) _currentProgress = 100;
+
+                // Обновляем UI через Dispatcher
+                Application.Current.Dispatcher.Invoke(() =>
                 {
-                    // Возвращаемся в UI поток для открытия окна
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        OpenAuthWindow();
-                    });
+                    progressBar.Value = _currentProgress;
+                    txtPercent.Text = $"{_currentProgress}%";
+                    UpdateStatus();
                 });
+
+                // Проверяем завершение
+                if (_currentProgress >= 100)
+                {
+                    progressTimer.Stop();
+
+                    Task.Delay(300).ContinueWith(t =>
+                    {
+                        // Возвращаемся в UI поток для открытия окна
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            OpenAuthWindow();
+                        });
+                    });
+                }
             }
         }
 
